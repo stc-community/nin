@@ -59,3 +59,11 @@ ev := nostr.Event{
 - `m` means `moudle`
 - `c` means `controller`
 - `a` means `action`
+
+## License
+
+Nin source code is available under the MIT [License](https://github.com/stc-community/nin/blob/main/LICENSE).
+
+## Thanks
+
+[go-nostr](https://github.com/nbd-wtf/go-nostr), [gin](https://github.com/gin-gonic/gin)
