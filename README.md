@@ -2,8 +2,6 @@
 
 Nin is a client framework for [nostr-relayer](https://github.com/fiatjaf/relayer)
 
-
-
 ## Installing
 
 ```sh
@@ -45,3 +43,19 @@ func main() {
 	e.Run()
 }
 ```
+
+Another client send event should be like this
+
+~~~go
+ev := nostr.Event{
+		PubKey:    pub,
+		CreatedAt: time.Now(),
+		Kind:      nostr.KindTextNote,
+		Tags:      nostr.Tags{{"m", "first"}, {"c", "hello"}, {"a", "world"}},
+		Content:   "anything you like",
+	}
+~~~
+
+- `m` means `moudle`
+- `c` means `controller`
+- `a` means `action`
