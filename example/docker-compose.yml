@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  relay:
+    image: taosheng205054/nostr-relayer-sqlite:v0.0.1
+    restart: always
+    environment:
+      PORT: 2700
+    ports:
+      - "2700:2700"
