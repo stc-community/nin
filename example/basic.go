@@ -14,7 +14,7 @@ func main() {
 		Kinds: []int{sdk.KindTextNote},
 		Since: &tm,
 	}}
-	e, err := nin.New(&nin.Options{
+	e, err := nin.Default(&nin.Options{
 		Scheme:     "ws",
 		Addr:       "127.0.0.1:2700",
 		PrivateKey: sdk.GeneratePrivateKey(),
@@ -23,7 +23,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	e.Use(nin.Logger())
 	e.Add("first.hello.world", func(c *nin.Context) error {
 		return c.String("Hello, World")
 	})

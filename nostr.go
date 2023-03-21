@@ -5,7 +5,6 @@ import (
 	"sync"
 
 	sdk "github.com/nbd-wtf/go-nostr"
-	"github.com/sirupsen/logrus"
 )
 
 type Engine struct {
@@ -50,6 +49,15 @@ func New(opt *Options) (*Engine, error) {
 	return engine, nil
 }
 
+func Default(opt *Options) (*Engine, error) {
+	engine, err := New(opt)
+	if err != nil {
+		return nil, err
+	}
+	engine.Use(Logger(), Recovery())
+	return engine, nil
+}
+
 func (e *Engine) Run() {
 	debugPrint(`[DEBUG] Now Nin started and waiting for events...`)
 	e.subEvents(e.relay.Subscribe(context.Background(), e.opt.Filters))
@@ -71,11 +79,6 @@ func (e *Engine) allocateContext() *Context {
 }
 
 func (e *Engine) handle(event *sdk.Event) error {
-	defer func() {
-		if r := recover(); r != nil {
-			logrus.Error("nin handle panic", r)
-		}
-	}()
 	c := e.pool.Get().(*Context)
 	defer func() {
 		c.Reset()

@@ -13,19 +13,18 @@ var (
 )
 
 type IRoutes interface {
-	Use(...HandlerFunc) IRoutes
-	Add(string, ...HandlerFunc) IRoutes
+	Use(handlers ...HandlerFunc) IRoutes
+	Add(path string, handlers ...HandlerFunc) IRoutes
 	Handlers() map[string]HandlersChain
+	Middles() HandlersChain
 	Close() error
 }
 
 type Router struct {
 	MiddleWares HandlersChain
 	handlers    map[string]HandlersChain
-	//relay       *sdk.Relay
-	//Action   *Action
-	ctx    context.Context
-	cancel context.CancelFunc
+	ctx         context.Context
+	cancel      context.CancelFunc
 }
 
 var _ IRoutes = (*Router)(nil)
@@ -48,11 +47,18 @@ func (r *Router) addRoute(path string, handlers HandlersChain) {
 	if r.handlers == nil {
 		r.handlers = make(map[string]HandlersChain)
 	}
+	if _, ok := r.handlers[path]; ok {
+		panic("handlers are already registered for path '" + path + "'")
+	}
 	r.handlers[path] = handlers
 }
 
 func (r *Router) Handlers() map[string]HandlersChain {
 	return r.handlers
+}
+
+func (r *Router) Middles() HandlersChain {
+	return r.MiddleWares
 }
 
 func (r *Router) Close() error {
