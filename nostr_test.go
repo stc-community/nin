@@ -9,11 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var engine *Engine
-var err error
-
 // run docker-compose first in 'example' folder (docker-compose up -d)
-func init() {
+func testNew() (engine *Engine, err error) {
 	SetMode(TestMode)
 	tm := time.Now().Add(-5 * time.Second)
 	filters := []sdk.Filter{{
@@ -29,13 +26,16 @@ func init() {
 	if err != nil {
 		panic(fmt.Sprintf("engine new failed :%v", err))
 	}
+	return
 }
 
 func TestEngine(t *testing.T) {
+	engine, _ := testNew()
 	assert.NotNil(t, engine)
 }
 
 func TestAddRoute(t *testing.T) {
+	engine, _ := testNew()
 	engine.Add("first.hello.world", func(c *Context) error {
 		return c.String("Hello, world!")
 	}, func(c *Context) error {
@@ -46,6 +46,7 @@ func TestAddRoute(t *testing.T) {
 }
 
 func TestAddRouteFails(t *testing.T) {
+	engine, _ := testNew()
 	assert.Panics(t, func() { engine.Add("first", func(_ *Context) error { return nil }) })
 	assert.Panics(t, func() { engine.Add("first.hello", func(_ *Context) error { return nil }) })
 	assert.Panics(t, func() { engine.Add("first.hello.world.world", func(_ *Context) error { return nil }) })
