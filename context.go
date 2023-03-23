@@ -21,7 +21,7 @@ type Context struct {
 	PublicKey string
 	Path      string
 	Handlers  HandlersChain // Middleware and final handler functions
-	Index     int8
+	index     int8
 	Action    *Action
 	Event     *sdk.Event
 	Status    sdk.Status
@@ -34,11 +34,11 @@ type Context struct {
 	Keys map[string]any
 }
 
-func (c *Context) Reset() {
+func (c *Context) reset() {
 	//c.Writer = nil
 	c.Path = ""
 	c.Handlers = nil
-	c.Index = -1
+	c.index = -1
 	c.Action = nil
 	c.Event = nil
 	c.Status = -1
@@ -48,28 +48,28 @@ func (c *Context) Reset() {
 }
 
 func (c *Context) Next() error {
-	c.Index++
-	for c.Index < int8(len(c.Handlers)) {
-		err := c.Handlers[c.Index](c)
+	c.index++
+	for c.index < int8(len(c.Handlers)) {
+		err := c.Handlers[c.index](c)
 		if err != nil {
 			return err
 		}
-		c.Index++
+		c.index++
 	}
 	return nil
 }
 
 func (c *Context) IsAborted() bool {
-	return c.Index >= AbortIndex
+	return c.index >= AbortIndex
 }
 
 func (c *Context) Abort() {
-	c.Index = AbortIndex
+	c.index = AbortIndex
 	return
 }
 
 func (c *Context) AbortWithError(err error) error {
-	c.Index = AbortIndex
+	c.index = AbortIndex
 	return c.String(err.Error())
 
 }
