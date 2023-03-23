@@ -41,11 +41,11 @@ var consoleColorMode = autoColor
 
 // LoggerConfig defines the config for Logger middleware.
 type LoggerConfig struct {
-	// Optional. Default value is gin.defaultLogFormatter
+	// Optional. Default value is nin.defaultLogFormatter
 	Formatter LogFormatter
 
 	// Output is a writer where logs are written.
-	// Optional. Default value is gin.DefaultWriter.
+	// Optional. Default value is nin.DefaultWriter.
 	Output io.Writer
 
 	// SkipPaths is an url path array which logs are not written.

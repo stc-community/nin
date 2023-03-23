@@ -81,7 +81,7 @@ func (e *Engine) allocateContext() *Context {
 func (e *Engine) handle(event *sdk.Event) error {
 	c := e.pool.Get().(*Context)
 	defer func() {
-		c.Reset()
+		c.reset()
 		e.pool.Put(c)
 	}()
 	action, err := parseTags(event.Tags)
@@ -102,7 +102,7 @@ func (e *Engine) handle(event *sdk.Event) error {
 		return ErrPathNotFound(path)
 	}
 	c.Handlers = handles
-	c.Index = -1
+	c.index = -1
 	c.Action = action
 	c.Event = event
 	c.ctx = context.Background()
