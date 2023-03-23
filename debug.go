@@ -35,7 +35,7 @@ func debugPrint(format string, values ...any) {
 		if !strings.HasSuffix(format, "\n") {
 			format += "\n"
 		}
-		fmt.Fprintf(DefaultWriter, "[Nin-debug] "+format, values...)
+		fmt.Fprintf(DefaultWriter, "[NIN-debug] "+format, values...)
 	}
 }
 
@@ -69,6 +69,6 @@ func debugPrintWARNINGNew() {
 
 func debugPrintError(err error) {
 	if err != nil && IsDebugging() {
-		fmt.Fprintf(DefaultErrorWriter, "[Nin-debug] [ERROR] %v\n", err)
+		fmt.Fprintf(DefaultErrorWriter, "[NIN-debug] [ERROR] %v\n", err)
 	}
 }
