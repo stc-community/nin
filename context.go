@@ -75,7 +75,11 @@ func (c *Context) AbortWithError(err error) error {
 }
 
 func (c *Context) String(value string) error {
-	c.Status = c.Writer.Publish(c.ctx, anyToEvent(value, c.Action, c.PublicKey, 30023))
+	status, err := c.Writer.Publish(c.ctx, anyToEvent(value, c.Action, c.PublicKey, 30023))
+	if err != nil {
+		return err
+	}
+	c.Status = status
 	return nil
 }
 

@@ -9,7 +9,7 @@ import (
 
 func main() {
 	nin.SetMode(nin.DebugMode)
-	tm := time.Now().Add(-5 * time.Second)
+	tm := sdk.Timestamp(time.Now().Add(-5 * time.Second).Unix())
 	filters := []sdk.Filter{{
 		Kinds: []int{sdk.KindTextNote},
 		Since: &tm,
@@ -26,5 +26,7 @@ func main() {
 	e.Add("first.hello.world", func(c *nin.Context) error {
 		return c.String("Hello, World")
 	})
-	e.Run()
+	if err := e.Run(); err != nil {
+		panic(err)
+	}
 }

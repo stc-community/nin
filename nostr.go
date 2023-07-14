@@ -72,11 +72,15 @@ func (e *Engine) resetFilters(sub *sdk.Subscription) {
 	}
 }
 
-func (e *Engine) Run() {
+func (e *Engine) Run() error {
 	debugPrint(`[DEBUG] Now Nin started and waiting for events...`)
-	sub := e.relay.Subscribe(context.Background(), e.opt.Filters)
+	sub, err := e.relay.Subscribe(context.Background(), e.opt.Filters)
+	if err != nil {
+		return err
+	}
 	go e.resetFilters(sub)
 	e.subEvents(sub)
+	return nil
 }
 
 func (e *Engine) subEvents(sub *sdk.Subscription) {
