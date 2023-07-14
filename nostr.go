@@ -115,7 +115,8 @@ func (e *Engine) handle(event *sdk.Event) error {
 		return err
 	}
 	c.Writer = e.relay
-	c.PublicKey = e.opt.publicKey
+	//c.PublicKey = e.opt.publicKey
+	c.PublicKey = event.PubKey
 	c.Path = path
 	handles, ok := e.IRoutes.Handlers()[path]
 	if !ok {

@@ -74,6 +74,10 @@ func (c *Context) AbortWithError(err error) error {
 
 }
 
+func (c *Context) Params() []byte {
+	return []byte(c.Event.Content)
+}
+
 func (c *Context) String(value string) error {
 	status, err := c.Writer.Publish(c.ctx, anyToEvent(value, c.Action, c.PublicKey, 30023))
 	if err != nil {
