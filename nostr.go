@@ -13,6 +13,7 @@ type Engine struct {
 	opt     *Options
 	noRoute HandlersChain
 	pool    sync.Pool
+	filters chan sdk.Filters
 }
 
 type HandlerFunc func(*Context) error
@@ -42,6 +43,7 @@ func New(opt *Options) (*Engine, error) {
 		IRoutes: r,
 		relay:   relay,
 		opt:     opt,
+		filters: make(chan sdk.Filters, 1),
 	}
 	engine.pool.New = func() interface{} {
 		return engine.allocateContext()
@@ -58,9 +60,23 @@ func Default(opt *Options) (*Engine, error) {
 	return engine, nil
 }
 
+func (e *Engine) ResetFilters(f sdk.Filters) {
+	e.filters <- f
+}
+
+func (e *Engine) resetFilters(sub *sdk.Subscription) {
+	for {
+		select {
+		case sub.Filters = <-e.filters:
+		}
+	}
+}
+
 func (e *Engine) Run() {
 	debugPrint(`[DEBUG] Now Nin started and waiting for events...`)
-	e.subEvents(e.relay.Subscribe(context.Background(), e.opt.Filters))
+	sub := e.relay.Subscribe(context.Background(), e.opt.Filters)
+	go e.resetFilters(sub)
+	e.subEvents(sub)
 }
 
 func (e *Engine) subEvents(sub *sdk.Subscription) {
