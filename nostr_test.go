@@ -12,7 +12,7 @@ import (
 // run docker-compose first in 'example' folder (docker-compose up -d)
 func testNew() (engine *Engine, err error) {
 	SetMode(TestMode)
-	tm := time.Now().Add(-5 * time.Second)
+	tm := sdk.Timestamp(time.Now().Add(-5 * time.Second).Unix())
 	filters := []sdk.Filter{{
 		Kinds: []int{sdk.KindTextNote},
 		Since: &tm,
