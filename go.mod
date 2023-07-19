@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/mattn/go-isatty v0.0.17
-	github.com/nbd-wtf/go-nostr v0.19.4
+	github.com/nbd-wtf/go-nostr v0.19.5
 	github.com/stretchr/testify v1.8.2
 	golang.org/x/exp v0.0.0-20221106115401-f9659909a136
 )

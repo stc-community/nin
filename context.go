@@ -17,15 +17,17 @@ import (
 const AbortIndex int8 = math.MaxInt8 / 2
 
 type Context struct {
-	Writer    *sdk.Relay
-	PublicKey string
-	Path      string
-	Handlers  HandlersChain // Middleware and final handler functions
-	index     int8
-	Action    *Action
-	Event     *sdk.Event
-	Status    sdk.Status
-	ctx       context.Context
+	Writer        *sdk.Relay
+	PrivateKey    string
+	SelfPublicKey string
+	PublicKey     string
+	Path          string
+	Handlers      HandlersChain // Middleware and final handler functions
+	index         int8
+	Action        *Action
+	Event         *sdk.Event
+	Status        sdk.Status
+	ctx           context.Context
 	// Errors is a list of errors attached to all the handlers/middlewares who used this context.
 	Errors errorMsgs
 	// This mutex protects Keys map.
@@ -36,6 +38,7 @@ type Context struct {
 
 func (c *Context) reset() {
 	//c.Writer = nil
+	c.PublicKey = ""
 	c.Path = ""
 	c.Handlers = nil
 	c.index = -1
@@ -79,7 +82,7 @@ func (c *Context) Params() []byte {
 }
 
 func (c *Context) String(value string) error {
-	status, err := c.Writer.Publish(c.ctx, anyToEvent(value, c.Action, c.PublicKey, 30023))
+	status, err := c.Writer.Publish(c.ctx, anyToEvent(value, c.Action, c.PrivateKey, c.SelfPublicKey, 30023))
 	if err != nil {
 		return err
 	}
