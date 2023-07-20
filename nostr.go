@@ -64,32 +64,35 @@ func (e *Engine) ResetFilters(f sdk.Filters) {
 	e.filters <- f
 }
 
-func (e *Engine) resetFilters(sub *sdk.Subscription) {
-	for {
-		select {
-		case sub.Filters = <-e.filters:
-		}
-	}
-}
-
 func (e *Engine) Run() error {
 	debugPrint(`[DEBUG] Now Nin started and waiting for events...`)
 	sub, err := e.relay.Subscribe(context.Background(), e.opt.Filters)
 	if err != nil {
 		return err
 	}
-	go e.resetFilters(sub)
 	e.subEvents(sub)
 	return nil
 }
 
+func (e *Engine) restart() {
+	debugPrint(`[DEBUG] Now Nin restarting...`)
+	//e.relay.Close()
+	sub, _ := e.relay.Subscribe(context.Background(), e.opt.Filters)
+	e.subEvents(sub)
+	debugPrint(`[DEBUG] Now Nin restarted and waiting for events...`)
+}
+
 func (e *Engine) subEvents(sub *sdk.Subscription) {
-	go func() {
-		<-sub.EndOfStoredEvents
-	}()
-	for event := range sub.Events {
-		if err := e.handle(event); err != nil {
-			e.opt.ErrFun(err)
+	for {
+		select {
+		case event := <-sub.Events:
+			if err := e.handle(event); err != nil {
+				e.opt.ErrFun(err)
+			}
+		case filters := <-e.filters:
+			e.opt.Filters = filters
+			e.restart()
+			return
 		}
 	}
 }
