@@ -75,11 +75,10 @@ func (e *Engine) Run() error {
 }
 
 func (e *Engine) restart() {
-	debugPrint(`[DEBUG] Now Nin restarting...`)
+	debugPrint(`[DEBUG] Now Nin restarted and waiting for events...`)
 	//e.relay.Close()
 	sub, _ := e.relay.Subscribe(context.Background(), e.opt.Filters)
 	e.subEvents(sub)
-	debugPrint(`[DEBUG] Now Nin restarted and waiting for events...`)
 }
 
 func (e *Engine) subEvents(sub *sdk.Subscription) {
