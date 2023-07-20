@@ -127,6 +127,7 @@ func (e *Engine) handle(event *sdk.Event) error {
 	c.index = -1
 	c.Action = action
 	c.Event = event
+	c.Status = sdk.PublishStatusFailed
 	c.ctx = context.Background()
 	return c.Next()
 }
